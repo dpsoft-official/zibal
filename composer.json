@@ -1,0 +1,44 @@
+{
+    "name": "dpsoft/zibal",
+    "description": "Zibal online payment - درگاه پرداخت آسان پرداخت به زبان PHP",
+    "keywords": [
+        "dpsoft",
+        "zibal"
+    ],
+    "homepage": "https://github.com/dpsoft/zibal",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Dpsoft",
+            "email": "info@dpsoft.ir",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "rmccue/requests": ">=1.0",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dpsoft\\Zibal\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dpsoft\\Zibal\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
