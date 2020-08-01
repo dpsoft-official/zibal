@@ -43,7 +43,7 @@ class Zibal
             ]
         );
         $result = json_decode($response->body, true);
-        if ($response->success and $result['trackId'] and $result['result']==100) {
+        if ($response->success and ($result['trackId']??false) and $result['result']==100) {
             $this->trackId = $result['trackId'];
             return [
                 'token' => $this->trackId,
