@@ -4,11 +4,12 @@ namespace Dpsoft\Zibal\Tests;
 
 use Dpsoft\Zibal\Zibal;
 use PHPUnit\Framework\TestCase;
+use WpOrg\Requests\Transport;
 
 class ZibalTest extends TestCase
 {
     /**
-     * @var \MockTransport
+     * @var MockTransport
      */
     public $transport;
     /**
@@ -28,37 +29,38 @@ class ZibalTest extends TestCase
     /** @test */
     public function it_could_get_valid_token_via_request()
     {
-        $trackId=uniqid();
-        $this->transport->body=json_encode(['trackId'=>$trackId,'result'=>100]);
-        $request=$this->zibal->request('https://dpe.ac/callback',100000);
-        $this->assertEquals($request['token'],$trackId);
-        $this->assertContains($trackId,$this->zibal->redirectUrl());
+        $trackId = uniqid();
+        $this->transport->body = json_encode(['trackId' => $trackId, 'result' => 100]);
+        $request = $this->zibal->request('https://dpe.ac/callback', 100000);
+        $this->assertEquals($request['token'], $trackId);
+        $this->assertContains($trackId, $this->zibal->redirectUrl());
     }
 
     /** @test */
     public function it_could_verify_success_transaction()
     {
-        $_GET['refNumber']=uniqid();
-        $_GET['trackId']=uniqid();
-        $_GET['status']=1;
-        $_GET['success']=1;
+        $_GET['refNumber'] = uniqid();
+        $_GET['trackId'] = uniqid();
+        $_GET['status'] = 1;
+        $_GET['success'] = 1;
         $amount = 10000;
 
-        $exceptedData =[
-            'status'=>1,
-            'amount'=>$amount,
-            'refNumber'=>$_GET['refNumber'],
-            'cardNumber'=>'123456789',
-            'orderId'=>uniqid()
+        $exceptedData = [
+            'status' => 1,
+            'amount' => $amount,
+            'refNumber' => $_GET['refNumber'],
+            'cardNumber' => '123456789',
+            'orderId' => uniqid()
         ];
-        $this->transport->body=json_encode($exceptedData);
-        $result = $this->zibal->verify($amount,$_GET['trackId']);
-        self::assertEquals($exceptedData['cardNumber'],$result['card_number']);
-        self::assertEquals($exceptedData['refNumber'],$result['transaction_id']);
+        $this->transport->body = json_encode($exceptedData);
+        $result = $this->zibal->verify($amount, $_GET['trackId']);
+        self::assertEquals($exceptedData['cardNumber'], $result['card_number']);
+        self::assertEquals($exceptedData['refNumber'], $result['transaction_id']);
     }
 }
 
-class MockTransport implements \Requests_Transport {
+class MockTransport implements Transport
+{
     public $code = 200;
     public $chunked = false;
     public $body = 'Test Body';
@@ -113,7 +115,8 @@ class MockTransport implements \Requests_Transport {
         511 => '511 Network Authentication Required',
     );
 
-    public function request($url, $headers = array(), $data = array(), $options = array()) {
+    public function request($url, $headers = array(), $data = array(), $options = array())
+    {
         $status = isset(self::$messages[$this->code]) ? self::$messages[$this->code] : $this->code . ' unknown';
         $response = "HTTP/1.0 $status\r\n";
         $response .= "Content-Type: text/plain\r\n";
@@ -126,7 +129,8 @@ class MockTransport implements \Requests_Transport {
         return $response;
     }
 
-    public function request_multiple($requests, $options) {
+    public function request_multiple($requests, $options)
+    {
         $responses = array();
         foreach ($requests as $id => $request) {
             $handler = new MockTransport();
@@ -145,7 +149,8 @@ class MockTransport implements \Requests_Transport {
         return $responses;
     }
 
-    public static function test() {
+    public static function test($capabilities = [])
+    {
         return true;
     }
 }

@@ -16,8 +16,8 @@
         }
     ],
     "require": {
-        "php": "^7.1",
-        "rmccue/requests": ">=1.0",
+        "php": "^7.1 || ^8.0",
+        "rmccue/requests": "^2.0",
         "ext-json": "*"
     },
     "require-dev": {

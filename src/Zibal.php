@@ -2,6 +2,8 @@
 
 namespace Dpsoft\Zibal;
 
+use WpOrg\Requests\Requests;
+
 class Zibal
 {
     private $restEndpoint = 'https://gateway.zibal.ir/v1';
@@ -33,7 +35,7 @@ class Zibal
         $invoiceId = $this->getInvoiceId();
 
         $response = $this->httpRequest(
-            \Requests::POST,
+            Requests::POST,
             '/request',
             [
                 'merchant' => $this->merchant,
@@ -72,7 +74,7 @@ class Zibal
             throw new \Exception($this->statusCodes($status), $status);
         }
 
-        $response = $this->httpRequest(\Requests::POST, '/verify', ['merchant' => $this->merchant, 'trackId' => $trackId]);
+        $response = $this->httpRequest(Requests::POST, '/verify', ['merchant' => $this->merchant, 'trackId' => $trackId]);
         $result = json_decode($response->body,true);
         if (
             $response->success and
@@ -113,13 +115,12 @@ class Zibal
      * @param string $method
      * @param string $endpoint
      * @param array $data
-     * @return \Requests_Response
-     * @throws \Requests_Exception
+     * @return \WpOrg\Requests\Response
      */
-    public function httpRequest($method = \Requests::GET, $endpoint = '', $data = [])
+    public function httpRequest($method = Requests::GET, $endpoint = '', $data = [])
     {
         $options = !empty($this->transport) ? ['transport' => $this->transport] : [];
-        return \Requests::request(
+        return Requests::request(
             $this->restEndpoint . $endpoint,
             [
                 'accept' => 'application/json',
