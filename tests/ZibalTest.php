@@ -17,7 +17,7 @@ class ZibalTest extends TestCase
      */
     private $zibal;
 
-    protected function setUp()
+    protected function setUp():void
     {
         $this->transport = new MockTransport();
         $this->zibal = new Zibal();
