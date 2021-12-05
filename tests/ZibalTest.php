@@ -33,7 +33,7 @@ class ZibalTest extends TestCase
         $this->transport->body = json_encode(['trackId' => $trackId, 'result' => 100]);
         $request = $this->zibal->request('https://dpe.ac/callback', 100000);
         $this->assertEquals($request['token'], $trackId);
-        $this->assertContains($trackId, $this->zibal->redirectUrl());
+        $this->assertStringContainsString($trackId, $this->zibal->redirectUrl());
     }
 
     /** @test */
